@@ -45,6 +45,17 @@ class TodoListPage extends StatefulWidget {
 
 class _TodoListPageState extends State<TodoListPage> {
 
+
+  final _items = <Todo>[];  // 할 일 목록 보관
+
+  var _todoController = TextEditingController();
+
+  @override
+  void dispose() {
+    _todoController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -59,7 +70,33 @@ class _TodoListPageState extends State<TodoListPage> {
         // the App.build method, and use it to set our appbar title.
         title: Text('남은 할 일'),
       ),
-      body: Container(),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _todoController,
+                  ),
+                ),
+                RaisedButton(
+                    child: Text('추가'),
+                    onPressed: () {}
+                ),
+              ],
+            ),
+            Expanded(
+                child: ListView(
+                  children: [
+
+                  ],
+                ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
