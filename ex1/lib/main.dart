@@ -31,6 +31,17 @@ class _BmiMainState extends State<BmiMain> {
   // TextField 의 현잿값을 얻는 데 필요
   final _formKey = GlobalKey<FormState>(); // 폼의 상태를 얻기 위한 키
 
+  final _heightController = TextEditingController();
+  final _weightController = TextEditingController();
+
+  // 다 사용한 컨트롤러의 인스턴스는 반드시 화면이 종료될 때 해제해야 함!!
+  @override
+  void dispose() {
+    _heightController.dispose();
+    _weightController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +60,14 @@ class _BmiMainState extends State<BmiMain> {
                   border: OutlineInputBorder(),
                   hintText: '키',
                 ),
+                controller: _heightController,
                 keyboardType: TextInputType.number, // 숫자만 입력할 수 있음
+                validator: (value) {
+                  if (value!.trim().isEmpty) {  // 조건에 맞으면 에러 메시지 표시
+                    return '키를 입력하세요.';
+                  }
+                  return null;  // null을 반환하면 에러가 없는 것임
+                },
               ),
               SizedBox(
                 height: 16.0,
@@ -59,7 +77,14 @@ class _BmiMainState extends State<BmiMain> {
                   border: OutlineInputBorder(),
                   hintText: '몸무게',
                 ),
+                controller: _weightController,
                 keyboardType: TextInputType.number, // 숫자만 입력할 수 있음
+                validator: (value) {
+                  if (value!.trim().isEmpty) {  // 조건에 맞으면 에러 메시지 표시
+                    return '몸무게를 입력하세요.';
+                  }
+                  return null;  // null을 반환하면 에러가 없는 것임
+                },
               ),
               Container(
                 margin: const EdgeInsets.only(top: 16.0),
