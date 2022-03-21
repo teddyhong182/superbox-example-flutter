@@ -46,7 +46,10 @@ class TodoListPage extends StatefulWidget {
 class _TodoListPageState extends State<TodoListPage> {
 
 
-  final _items = <Todo>[];  // 할 일 목록 보관
+  final _items = <Todo>[
+    Todo('플러터 개발'),
+    Todo('플러터 개발2'),
+  ];  // 할 일 목록 보관
 
   var _todoController = TextEditingController();
 
@@ -83,20 +86,56 @@ class _TodoListPageState extends State<TodoListPage> {
                 ),
                 RaisedButton(
                     child: Text('추가'),
-                    onPressed: () {}
+                    onPressed: () => _addTodo(Todo(_todoController.text)),
                 ),
               ],
             ),
             Expanded(
                 child: ListView(
-                  children: [
-
-                  ],
+                  children: _items.map((todo) => _buildItemWidget(todo)).toList(),
                 ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  // 할 일 객체를 ListTile 형태로 변경하는 메서드
+  Widget _buildItemWidget(Todo todo) {
+    return ListTile(
+      onTap: () => _toggleTodo(todo), // 완료, 미완료
+      title: Text(
+        todo.title,
+        style: todo.isDone ? TextStyle(decoration: TextDecoration.lineThrough, fontStyle: FontStyle.italic,) : null,
+      ),
+      trailing: IconButton(
+        icon: Icon(Icons.delete_forever),
+        onPressed: () => _deleteTodo(todo), // 삭제
+      ),
+    );
+  }
+
+  // 할 일 추가 메서드
+  void _addTodo(Todo todo) {
+    setState(() {
+      _items.add(todo);
+      _todoController.text = '';  // 할 일 입력 필드를 비움
+    });
+  }
+
+  // 할 일 삭제 메서드
+  void _deleteTodo(Todo todo) {
+    setState(() {
+      _items.remove(todo);
+    });
+  }
+
+  // 할 일 완료/미완료 메서드
+  void _toggleTodo(Todo todo) {
+    setState(() {
+      todo.isDone = !todo.isDone;
+
+    });
   }
 }
