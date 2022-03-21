@@ -93,7 +93,15 @@ class _BmiMainState extends State<BmiMain> {
                   onPressed: () {
                     // 폼에 입력된 값 검증
                     if (_formKey.currentState!.validate()) {
-                      // 검증시 처리
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => BmiResult(
+                                double.parse(_heightController.text.trim()),
+                                double.parse(_weightController.text.trim())
+                            ),
+                        ),
+                      );
                     }
                   },
                   child: Text('결과'),
