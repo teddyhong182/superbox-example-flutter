@@ -56,34 +56,38 @@ class _BmiMainState extends State<BmiMain> {
           child: Column(
             children: <Widget>[
               TextFormField(
-                decoration: InputDecoration(  // 외곽선이 있고 힌트로 '키'를 표시
+                decoration: InputDecoration(
+                  // 외곽선이 있고 힌트로 '키'를 표시
                   border: OutlineInputBorder(),
                   hintText: '키',
                 ),
                 controller: _heightController,
                 keyboardType: TextInputType.number, // 숫자만 입력할 수 있음
                 validator: (value) {
-                  if (value!.trim().isEmpty) {  // 조건에 맞으면 에러 메시지 표시
+                  if (value!.trim().isEmpty) {
+                    // 조건에 맞으면 에러 메시지 표시
                     return '키를 입력하세요.';
                   }
-                  return null;  // null을 반환하면 에러가 없는 것임
+                  return null; // null을 반환하면 에러가 없는 것임
                 },
               ),
               SizedBox(
                 height: 16.0,
               ),
               TextFormField(
-                decoration: InputDecoration(  // 외곽선이 있고 힌트로 '몸무게'를 표시
+                decoration: InputDecoration(
+                  // 외곽선이 있고 힌트로 '몸무게'를 표시
                   border: OutlineInputBorder(),
                   hintText: '몸무게',
                 ),
                 controller: _weightController,
                 keyboardType: TextInputType.number, // 숫자만 입력할 수 있음
                 validator: (value) {
-                  if (value!.trim().isEmpty) {  // 조건에 맞으면 에러 메시지 표시
+                  if (value!.trim().isEmpty) {
+                    // 조건에 맞으면 에러 메시지 표시
                     return '몸무게를 입력하세요.';
                   }
-                  return null;  // null을 반환하면 에러가 없는 것임
+                  return null; // null을 반환하면 에러가 없는 것임
                 },
               ),
               Container(
@@ -96,10 +100,9 @@ class _BmiMainState extends State<BmiMain> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => BmiResult(
-                                double.parse(_heightController.text.trim()),
-                                double.parse(_weightController.text.trim())
-                            ),
+                          builder: (context) => BmiResult(
+                              double.parse(_heightController.text.trim()),
+                              double.parse(_weightController.text.trim())),
                         ),
                       );
                     }
@@ -119,31 +122,73 @@ class BmiResult extends StatelessWidget {
   final double height;
   final double weight;
 
-  BmiResult(this.height, this.weight);  // 키와 몸무게를 받는 생성자
+  BmiResult(this.height, this.weight); // 키와 몸무게를 받는 생성자
 
   @override
   Widget build(BuildContext context) {
+    final bmi = weight / ((height / 100) * (height / 100));
+    print('bmi : $bmi');
+
     return Scaffold(
-      appBar: AppBar(title: Text('비만도 계산기'),),
+      appBar: AppBar(
+        title: Text('비만도 계산기'),
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              '정상',
+              _calcBmi(bmi), // 계산 결과에 따른 결과 문자열
               style: TextStyle(fontSize: 36),
             ),
             SizedBox(
               height: 16,
             ),
-            Icon( //
-              Icons.sentiment_satisfied,
-              color: Colors.green,
-              size: 100,
-            ),
+            _buildIcon(bmi),
           ],
         ),
       ),
     );
+  }
+
+  String _calcBmi(double bmi) {
+    var result = '저체중';
+
+    if (bmi >= 35) {
+      result = '고도 비만';
+    } else if (bmi >= 30) {
+      result = '2단계 비만';
+    } else if (bmi >= 25) {
+      result = '1단계 비만';
+    } else if (bmi >= 23) {
+      result = '과체중';
+    } else if (bmi >= 18.5) {
+      result = '정상';
+    }
+
+    return result;
+  }
+
+  Icon _buildIcon(double bmi) {
+    if (bmi >= 23) {
+      return Icon(
+        Icons.sentiment_very_dissatisfied,
+        color: Colors.red,
+        size: 100,
+      );
+    } else if (bmi >= 18.5) {
+      return Icon(
+        Icons.sentiment_satisfied,
+        color: Colors.green,
+        size: 100,
+      );
+    } else {
+      return Icon(
+        //
+        Icons.sentiment_dissatisfied,
+        color: Colors.orange,
+        size: 100,
+      );
+    }
   }
 }
