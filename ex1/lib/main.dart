@@ -10,69 +10,83 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'Retrieve Text Input',
-      home: MyCustomForm(),
+    return MaterialApp(
+      title: '비만도 계산기',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: BmiMain(),
     );
   }
 }
 
-class MyCustomForm extends StatefulWidget {
-  const MyCustomForm({Key? key}) : super(key: key);
+class BmiMain extends StatefulWidget {
+  const BmiMain({Key? key}) : super(key: key);
 
   @override
-  State<MyCustomForm> createState() => _MyCustomFormState();
+  State<BmiMain> createState() => _BmiMainState();
 }
 
-class _MyCustomFormState extends State<MyCustomForm> {
+class _BmiMainState extends State<BmiMain> {
   // TextField 의 현잿값을 얻는 데 필요
-  final myController = TextEditingController();
-
-
-  @override
-  void initState() {
-    super.initState();
-
-    // addListener로 상태를 모니터링할 수 있음.
-    myController.addListener(_printLatestValue);
-  }
-
-
-  @override
-  void dispose() {
-    // 화면이 종료될 때는 반드시 위젯 트리에서 컨트롤러를 해제해야 함
-    myController.dispose();
-    super.dispose();
-  }
-
-  _printLatestValue() {
-    // 컨트롤러의 text 프로퍼티로 연결된 TextField에 입력된 값을 얻음.
-    print("두번째 text field: ${myController.text}");
-  }
+  final _formKey = GlobalKey<FormState>(); // 폼의 상태를 얻기 위한 키
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Text Input 연습'),
+        title: Text('비만도 계산기'),
       ),
-      body: Padding(
+      body: Container(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: <Widget>[
-            TextField(
-              onChanged: (text) { // 텍스트 변경 감지 이벤트
-                print('첫번째 text field: $text');
-              },
-            ),
-            TextField(
-              controller: myController, // 컨트롤러를 지정
-            )
-          ],
-        )
+        child: Form(
+          // 폼
+          key: _formKey, // 키 할당
+          child: Column(
+            children: <Widget>[
+              TextFormField(
+                decoration: InputDecoration(  // 외곽선이 있고 힌트로 '키'를 표시
+                  border: OutlineInputBorder(),
+                  hintText: '키',
+                ),
+                keyboardType: TextInputType.number, // 숫자만 입력할 수 있음
+              ),
+              SizedBox(
+                height: 16.0,
+              ),
+              TextFormField(
+                decoration: InputDecoration(  // 외곽선이 있고 힌트로 '몸무게'를 표시
+                  border: OutlineInputBorder(),
+                  hintText: '몸무게',
+                ),
+                keyboardType: TextInputType.number, // 숫자만 입력할 수 있음
+              ),
+              Container(
+                margin: const EdgeInsets.only(top: 16.0),
+                alignment: Alignment.centerRight,
+                child: RaisedButton(
+                  onPressed: () {
+                    // 폼에 입력된 값 검증
+                    if (_formKey.currentState!.validate()) {
+                      // 검증시 처리
+                    }
+                  },
+                  child: Text('결과'),
+                ),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
+}
 
+class BmiResult extends StatelessWidget {
+  const BmiResult({Key? key}) : super(key: key);
 
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
 }
